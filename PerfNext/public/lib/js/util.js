@@ -511,11 +511,28 @@ function getHostID() {
 	return hostID;
 }
 
+function getHostIDtimeout(currentTime){
+    // After waiting for 30 seconds, issue a warning as the machine list may not have loaded correctly
+    if (currentTime === 30) {
+    	console.log("Machine list not loaded after 30 seconds, please check machine_list_url and jenkins username and password");
+    	return;
+    }
+    if(machineList === null){
+        console.log("Time Waited", currentTime);
+        setTimeout(function() {
+            getHostIDtimeout(currentTime + 5);
+        }, 5000);
+    }
+    else{
+        return getHostID();
+    }
+}
+
 function getHostNode() {
 
 	console.log('util.js: Entering getHostNode()');
 		
-	var hostID = getHostID();
+	var hostID = getHostIDtimeout(0);
 
 	var hostNode = allmachinesInfo.querySelector('[id="' + hostID + '"]');
 	
@@ -738,8 +755,7 @@ function populateHWSpecificArguments(name, variant) {
 	
 	$('.'+hwEnvClassName).remove();
 
-	var hostID = getHostID();
-	
+	var hostID = getHostIDtimeout(0);
 	// Populate HW specific env vars if the machine exists in the machine database (i.e. master_machine_list.xml)
 	if (hostID)
 	{		
