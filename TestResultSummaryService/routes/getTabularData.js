@@ -2,8 +2,27 @@ const { TestResultsDB, ObjectID } = require( '../Database' );
 
 function exceedDate(jdkDate) {
     return function(element) {
-    	return parseInt(element.jdkDate) <= parseInt(jdkDate);
+        if (element.sdkResource == "releases") {
+            return parseInt(parseTimestamp(element.timestamp)) <= parseInt(jdkDate);
+        } else {
+            return parseInt(element.jdkDate) <= parseInt(jdkDate);
+        }
     }
+}
+
+function parseTimestamp(timestamp) {
+    const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    let dateString = "";
+    if (day.toString() == 1) {
+        dateString = year.toString() + months[month] + '0' + day.toString();
+    } else {
+        dateString = year.toString() + months[month] + day.toString();
+    }
+    return dateString;
 }
 
 
