@@ -17,6 +17,7 @@ function parseTimestamp(timestamp) {
     const month = date.getMonth();
     const day = date.getDate();
     let dateString = "";
+
     if (day.toString().length == 1) {
         dateString = year.toString() + months[month] + '0' + day.toString();
     } else {
